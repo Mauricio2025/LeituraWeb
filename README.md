@@ -50,7 +50,7 @@ A estrutura do projeto está organizada para facilitar a navegação e manutenç
 Siga estas etapas para configurar e rodar o projeto localmente:
 **Clone este repositório**:
 
-git clone https://github.com/<seu-usuario>/web-app-leitura-compartilhada.git
+git clone https://github.com/mauricio2025/web-app-leitura-compartilhada.git
 
 **Instale as dependências (caso utilize Node.js)**:
 
