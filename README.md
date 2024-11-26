@@ -32,7 +32,6 @@ Um **web app inovador** para leitura compartilhada, projetado para proporcionar 
 
 A estrutura do projeto está organizada para facilitar a navegação e manutenção:
 
-``plaintext
 📁 src/
 ├── 📁 pages/
 │   ├── login.html
