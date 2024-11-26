@@ -1,0 +1,77 @@
+/* Corpo */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #1e1e1e;
+    color: #ffffff;
+    overflow: hidden;
+  }
+  
+  /* Esconde elementos */
+  .hidden {
+    display: none !important;
+  }
+  
+  /* Spinner */
+  .spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    background-color: #1e1e1e;
+    z-index: 1000;
+    position: fixed;
+  }
+  
+  .spinner h1 {
+    font-size: 3rem;
+    color: #ffca28;
+    text-align: center;
+  }
+  
+  /* Tela de Boas-Vindas */
+  #welcomePage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    background-color: #1e1e1e;
+    color: #ffffff;
+  }
+  
+  #welcomePage h1 {
+    font-size: 2.5rem;
+    color: #ffca28;
+    margin-bottom: 20px;
+  }
+  
+  #welcomePage p {
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin: 10px 0 20px;
+  }
+  
+  #welcomePage button {
+    margin: 10px;
+    padding: 12px 25px;
+    font-size: 1rem;
+    background-color: #ffca28;
+    color: #1e1e1e;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  #welcomePage button:hover {
+    background-color: #ffd95a;
+  }
+  
