@@ -10,24 +10,39 @@
 
 <body>
   <div id="dashboardPage">
-    <h1>Minhas leituras</h1>
+    <h1>Todos os Livros</h1>
     <section class="reading-section">
-      <h2>Lendo</h2>
-      <div id="currentlyReading" class="book-list"></div>
+      <div id="allBooks" class="book-list"></div>
     </section>
-    <section class="reading-section">
-      <h2>Próxima Leitura</h2>
-      <div id="nextReading" class="book-list"></div>
-      <!-- Livros para ler em breve -->
-    </section>
-    <footer class="bottom-nav">
-      <button class="nav-button" id="homeBtn">🏠</button>
-      <button class="nav-button" id="addBookBtn">➕</button>
-      <button class="nav-button" id="libraryBtn">📚</button>
-      <button class="nav-button" id="profileBtn">👤</button>
-    </footer>
   </div>
+  <!-- <section class="reading-section">
+    <h2>Próxima Leitura</h2>
+    <div id="nextReading" class="book-list"></div>
+  </section> -->
+  </div>
+  <script>
+    if (!['/login', '/register'].includes(window.location.pathname)) {
+      fetch('/footer.html')
+        .then(response => response.text())
+        .then(footerHtml => {
+          document.body.insertAdjacentHTML('beforeend', footerHtml);
 
+          // Agora o rodapé foi adicionado ao DOM
+          const addBookBtn = document.getElementById("addBookBtn");
+
+          if (addBookBtn) {
+            addBookBtn.addEventListener("click", () => {
+              console.log("Redirecionando para a página de criação de livro...");
+              window.location.href = "./createBook.html";
+            });
+          } else {
+            console.error("Botão 'Adicionar Livro' não encontrado na Dashboard.");
+          }
+        })
+        .catch(error => console.error("Erro ao carregar o rodapé:", error));
+    }
+
+  </script>
   <script src="./app.js" type="module"></script>
 </body>
 

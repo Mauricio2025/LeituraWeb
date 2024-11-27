@@ -1,17 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Leitura</title>
   <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
   <div id="readingPage">
     <h1 id="bookTitle">Título do Livro</h1>
     <p id="bookContent">Conteúdo do livro será exibido aqui.</p>
     <button id="backToDashboardBtn">Voltar para Dashboard</button>
   </div>
+
+  <script>
+    if (!['/login', '/register'].includes(window.location.pathname)) {
+      fetch('/footer.html')
+        .then(response => response.text())
+        .then(footerHtml => {
+          document.body.insertAdjacentHTML('beforeend', footerHtml);
+
+          // Agora o rodapé foi adicionado ao DOM
+          const addBookBtn = document.getElementById("addBookBtn");
+
+          if (addBookBtn) {
+            addBookBtn.addEventListener("click", () => {
+              console.log("Redirecionando para a página de criação de livro...");
+              window.location.href = "./createBook.html";
+            });
+          } else {
+            console.error("Botão 'Adicionar Livro' não encontrado na Dashboard.");
+          }
+        })
+        .catch(error => console.error("Erro ao carregar o rodapé:", error));
+    }
+
+  </script>
   <script src="./app.js" type="module"></script>
 </body>
+
 </html>

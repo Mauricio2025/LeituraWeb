@@ -35,11 +35,13 @@ const uploadBookFile = document.getElementById("uploadBookFile");
 const uploadBookBtn = document.getElementById("uploadBookBtn");
 const uploadStatus = document.getElementById("uploadStatus");
 const addBookBtn = document.getElementById("addBookBtn");
+const homeBtn = document.getElementById("homeBtn");
 const cancelBtn = document.getElementById("cancelBtn");
 const currentlyReading = document.getElementById("currentlyReading");
 const nextReading = document.getElementById("nextReading");
 const registerForm = document.getElementById("registerForm");
 const loginForm = document.getElementById("authForm");
+
 // Função de spinner para exibir enquanto carrega
 window.addEventListener("load", () => {
   if (spinner) {
@@ -142,81 +144,211 @@ onAuthStateChanged(auth, (user) => {
 });
 
 
-// Função para carregar livros do Firestore e exibir
+// Função para renderizar os livros no container
+const renderBooks = (container, books) => {
+  if (!container) {
+    console.warn("Contêiner não encontrado para renderizar os livros.");
+    return;
+  }
+
+  container.innerHTML = ""; // Limpa o contêiner antes de adicionar os livros
+
+  if (books.length === 0) {
+    console.warn("Nenhum livro para exibir.");
+    container.innerHTML = "<p>Nenhum livro encontrado.</p>";
+    return;
+  }
+
+  books.forEach((book) => {
+    console.log("Renderizando livro:", book);
+
+    const bookElement = document.createElement("div");
+    bookElement.classList.add("book-card");
+
+    // Define a capa do livro ou uma imagem padrão
+    const coverUrl = book.cover || "../img/pexels-photo-1907785.jpeg";
+    const coverImg = document.createElement("img");
+    coverImg.src = coverUrl;
+    coverImg.alt = book.title || "Sem título";
+    coverImg.classList.add("book-cover");
+    bookElement.appendChild(coverImg);
+
+    // Título do livro
+    const titleElement = document.createElement("div");
+    titleElement.classList.add("book-title");
+    titleElement.textContent = book.title || "Sem título";
+    bookElement.appendChild(titleElement);
+
+    // Adicionar o card ao contêiner
+    container.appendChild(bookElement);
+  });
+};
+
+// Função para carregar os livros do Firestore
 async function loadBooks() {
   try {
     const booksSnapshot = await getDocs(collection(db, "Books"));
-    const booksReading = [];
-    const booksNext = [];
+    const allBooks = [];
 
     booksSnapshot.forEach((doc) => {
       const book = doc.data();
-      console.log("Livro encontrado:", book); // Adicione este log para depuração
-      if (book.status === "reading") {
-        booksReading.push(book);
-      } else if (book.status === "next") {
-        booksNext.push(book);
-      }
+      console.log("Livro encontrado:", book);
+      allBooks.push(book);
     });
 
-    // Preencher as seções de livros
-    populateBooks(currentlyReading, booksReading);
-    populateBooks(nextReading, booksNext);
+    const allBooksContainer = document.getElementById("allBooks");
+
+    if (allBooksContainer) {
+      renderBooks(allBooksContainer, allBooks); // Renderiza todos os livros
+    } else {
+      console.error("Contêiner 'allBooks' não encontrado.");
+    }
   } catch (error) {
     console.error("Erro ao carregar livros:", error);
   }
 }
 
+// Chamar a função para carregar os livros ao iniciar
+loadBooks();
 
-// Função para criar os livros na interface
-// function populateBooks(container, books) {
-//   books.forEach((book) => {
-//     const bookElement = document.createElement("div");
-//     if (book.cover) {
-//       // Se houver capa, cria uma imagem
-//       const img = document.createElement("img");
-//       img.src = book.cover;
-//       img.alt = book.title;
-//       bookElement.appendChild(img);
-//     } else {
-//       // Se não houver capa, cria um placeholder com o título
-//       const placeholder = document.createElement("div");
-//       placeholder.classList.add("book-placeholder");
-//       placeholder.textContent = book.title;
-//       bookElement.appendChild(placeholder);
-//     }
-//     container.appendChild(bookElement);
-//   });
-// }
+// Configurar a capa ao selecionar um livro
+if (searchBookInput) {
+  searchBookInput.addEventListener("input", async (e) => {
+    const query = e.target.value.trim();
+    if (!query) {
+      searchResults.innerHTML = ""; // Limpa os resultados se o campo estiver vazio
+      return;
+    }
 
-function populateBooks(container, books) {
-  books.forEach((book) => {
-    const bookElement = document.createElement("div");
+    try {
+      const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}`);
+      const data = await response.json();
+      searchResults.innerHTML = ""; // Limpa os resultados anteriores
 
-    // Apenas exibe o título do livro
-    const titleElement = document.createElement("div");
-    titleElement.classList.add("book-title"); // Classe opcional para estilizar
-    titleElement.textContent = book.title;
-    bookElement.appendChild(titleElement);
+      if (data.items && data.items.length > 0) {
+        data.items.forEach((item) => {
+          const book = item.volumeInfo;
+          const li = document.createElement("li");
+          li.textContent = `${book.title} (${book.authors?.join(", ") || "Autor desconhecido"})`;
 
-    // Adiciona o livro no container
-    container.appendChild(bookElement);
+          li.addEventListener("click", () => {
+            // Preenche os campos com os dados do livro
+            bookTitleInput.value = book.title || "";
+            bookAuthorInput.value = book.authors?.join(", ") || "";
+            bookGenreInput.value = book.categories?.join(", ") || "";
+            bookDescriptionInput.value = book.description || "Sem descrição disponível.";
+
+            // Captura a URL da capa
+            const coverUrl = book.imageLinks?.thumbnail || "https://via.placeholder.com/128x192";
+            bookTitleInput.dataset.cover = coverUrl; // Armazena diretamente no input do título
+
+            console.log("Livro selecionado:", {
+              title: book.title,
+              authors: book.authors,
+              cover: coverUrl,
+            });
+
+            searchResults.innerHTML = ""; // Limpa os resultados após a seleção
+          });
+
+          searchResults.appendChild(li);
+        });
+      } else {
+        const noResults = document.createElement("li");
+        noResults.textContent = "Nenhum livro encontrado.";
+        searchResults.appendChild(noResults);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar livros:", error);
+    }
   });
 }
+
+
+
+// Função para salvar o livro no Firestore
+if (createBookForm) {
+  createBookForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const bookTitle = bookTitleInput.value;
+    const bookAuthor = bookAuthorInput.value;
+    const bookGenre = bookGenreInput.value;
+    const bookDescription = bookDescriptionInput.value;
+
+    // Captura o valor atualizado do dataset
+    const coverUrl = bookTitleInput.dataset.cover || "https://via.placeholder.com/128x192";
+
+    try {
+      await addDoc(collection(db, "Books"), {
+        title: bookTitle,
+        author: bookAuthor,
+        genre: bookGenre,
+        description: bookDescription,
+        cover: coverUrl, // Salva a URL da capa
+        createdAt: new Date(),
+        createdBy: auth.currentUser?.uid || "Desconhecido",
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Livro Adicionado!",
+        text: "Os detalhes do livro foram salvos com sucesso.",
+        timer: 2000,
+        timerProgressBar: true,
+        background: "#1e1e1e",
+        color: "#ffca28",
+      }).then(() => {
+        window.location.href = "./dashboard.html";
+      });
+    } catch (error) {
+      console.error("Erro ao salvar o livro:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Erro!",
+        text: "Não foi possível salvar o livro. Tente novamente.",
+        background: "#1e1e1e",
+        color: "#ffca28",
+      });
+    }
+  });
+}
+
+
+
+
+
 
 
 // Chama a função de carregar livros ao iniciar
-loadBooks();
+// loadBooks();
 
-// Ação do botão de adicionar livro
-if (addBookBtn) {
-  addBookBtn.addEventListener("click", () => {
-    console.log("Redirecionando para a página de criação de livro...");
-    window.location.href = "./createBook.html";
-  });
-} else {
-  console.error("Botão 'Adicionar Livro' não encontrado na Dashboard.");
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const addBookBtn = document.getElementById("addBookBtn");
+
+  if (addBookBtn) {
+    addBookBtn.addEventListener("click", () => {
+      console.log("Redirecionando para a página de criação de livro...");
+      window.location.href = "./createBook.html";
+    });
+  } else {
+    console.error("Botão 'Adicionar Livro' não encontrado na Dashboard.");
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const homeBtn = document.getElementById("homeBtn");
+
+  if (homeBtn) {
+    homeBtn.addEventListener("click", () => {
+      console.log("Redirecionando para a página inicial...");
+      window.location.href = "./dashboard.html";
+    });
+  } else {
+    console.error("Botão 'Home' não encontrado na Dashboard.");
+  }
+});
+
 
 // Função de upload de arquivos para o Firebase Storage
 if (uploadBookBtn) {
@@ -261,16 +393,13 @@ if (searchBookInput) {
       const data = await response.json();
       searchResults.innerHTML = ""; // Limpa os resultados anteriores
 
-      if (data.items) {
-        // Limita os resultados a no máximo 3
-        const limitedResults = data.items.slice(0, 3);
-
-        limitedResults.forEach((item) => {
+      if (data.items && data.items.length > 0) {
+        data.items.forEach((item) => {
           const book = item.volumeInfo;
+
           const li = document.createElement("li");
           li.textContent = `${book.title} (${book.authors?.join(", ") || "Autor desconhecido"})`;
 
-          // Adiciona evento de clique para preencher os campos
           li.addEventListener("click", () => {
             // Preenche os campos com os dados do livro
             bookTitleInput.value = book.title || "";
@@ -278,7 +407,13 @@ if (searchBookInput) {
             bookGenreInput.value = book.categories?.join(", ") || "";
             bookDescriptionInput.value = book.description || "Sem descrição disponível.";
 
-            // Limpa a lista de resultados após a seleção
+            // Atualiza o dataset do input com a URL da capa
+            const coverUrl = book.imageLinks?.thumbnail || "https://via.placeholder.com/128x192";
+            bookTitleInput.dataset.cover = coverUrl;
+
+            console.log("Capa capturada da API:", coverUrl); // Debug para verificar a URL da capa
+
+            // Limpa os resultados após a seleção
             searchResults.innerHTML = "";
           });
 
@@ -295,50 +430,8 @@ if (searchBookInput) {
   });
 }
 
-// Função para criar o livro
-if (createBookForm) {
-  createBookForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
 
-    const bookTitle = bookTitleInput.value;
-    const bookAuthor = bookAuthorInput.value;
-    const bookGenre = bookGenreInput.value;
-    const bookDescription = bookDescriptionInput.value;
 
-    try {
-      // Salvar os detalhes no Firestore
-      await addDoc(collection(db, "Books"), {
-        title: bookTitle,
-        author: bookAuthor,
-        genre: bookGenre,
-        description: bookDescription,
-        createdAt: new Date(),
-        createdBy: auth.currentUser.uid,
-      });
-
-      Swal.fire({
-        icon: "success",
-        title: "Livro Adicionado!",
-        text: "Os detalhes do livro foram salvos com sucesso.",
-        timer: 2000,
-        timerProgressBar: true,
-        background: "#1e1e1e",
-        color: "#ffca28",
-      }).then(() => {
-        window.location.href = "./dashboard.html";
-      });
-    } catch (error) {
-      console.error("Erro ao salvar o livro:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Erro!",
-        text: "Não foi possível salvar o livro. Tente novamente.",
-        background: "#1e1e1e",
-        color: "#ffca28",
-      });
-    }
-  });
-}
 
 // Função de logout
 if (cancelBtn) {

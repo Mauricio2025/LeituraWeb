@@ -13,31 +13,68 @@
 </head>
 
 <body>
-    <div id="createBookPage">
+    <!-- <div id="createBookPage">
         <h1>Adicionar Novo Livro</h1>
-
-        <!-- Área de Importação de Livro -->
         <div id="importBookSection" class="import-section">
             <label for="uploadBookFile" class="upload-label">
-                <img src="./img/download.png" alt="Upload Icon" class="upload-icon"> <!-- Ícone do Upload -->
+                <img src="./img/download.png" alt="Upload Icon" class="upload-icon">
             </label>
             <input type="file" id="uploadBookFile" class="hidden-input">
             <button id="uploadBookBtn" class="btn-upload">Fazer Upload</button>
             <p id="uploadStatus" class="upload-status"></p>
         </div>
-
-        <!-- Formulário de Adicionar Livro -->
         <form id="createBookForm">
-            <!-- <div class="form-group">
-                <label for="searchBook">Pesquisar Livro:</label>
-                <input type="text" id="searchBook" name="searchBook" placeholder="Digite o título do livro para buscar...">
-                <ul id="searchResults" class="search-results"></ul>
-            </div> -->
             <div class="form-group">
                 <label for="searchBook">Pesquisar Livro:</label>
                 <input type="text" id="searchBook" placeholder="Digite o título do livro para buscar..." />
                 <ul class="search-list" id="searchResults"></ul>
-            </div>            
+            </div>
+
+            <div class="form-group">
+                <label for="bookTitle">Título do Livro:</label>
+                <input type="text" id="bookTitle" name="bookTitle" placeholder="Exemplo: O Alquimista">
+            </div>
+
+            <div class="form-group">
+                <label for="bookAuthor">Autor:</label>
+                <input type="text" id="bookAuthor" name="bookAuthor" placeholder="Exemplo: Paulo Coelho">
+            </div>
+
+            <div class="form-group">
+                <label for="bookGenre">Gênero:</label>
+                <input type="text" id="bookGenre" name="bookGenre" placeholder="Exemplo: Ficção, Autoajuda">
+            </div>
+
+            <div class="form-group">
+                <label for="bookDescription">Descrição:</label>
+                <textarea id="bookDescription" name="bookDescription" placeholder="Descrição do livro..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-save">Salvar Livro</button>
+            <button type="button" id="cancelBtn" class="btn-cancel">Cancelar</button>
+        </form>
+    </div> -->
+    <div id="createBookPage" class="form-container" style="margin-top: -4rem;">
+        <h1>Adicionar Novo Livro</h1>
+
+        <!-- Área de Importação de Livro -->
+        <!-- <div id="importBookSection" class="import-section">
+            <label for="uploadBookFile" class="upload-label">
+                <img src="./img/upload-icon.png" alt="Upload Icon" class="upload-icon">
+            </label>
+            <input type="file" id="uploadBookFile" class="hidden-input">
+            <button id="uploadBookBtn" class="btn-upload">Fazer Upload</button>
+            <p id="uploadStatus" class="upload-status"></p>
+        </div> -->
+
+        <!-- Formulário de Adicionar Livro -->
+        <form id="createBookForm" class="book-form">
+            <div class="form-group">
+                <label for="searchBook">Pesquisar Livro:</label>
+                <input type="text" id="searchBook" name="searchBook"
+                    placeholder="Digite o título do livro para buscar...">
+                <ul id="searchResults" class="search-list"></ul>
+            </div>
 
             <div class="form-group">
                 <label for="bookTitle">Título do Livro:</label>
@@ -64,7 +101,33 @@
         </form>
     </div>
 
+
+
+    <script>
+        if (!['/login', '/register'].includes(window.location.pathname)) {
+            fetch('/footer.html')
+                .then(response => response.text())
+                .then(footerHtml => {
+                    document.body.insertAdjacentHTML('beforeend', footerHtml);
+
+                    // Agora o rodapé foi adicionado ao DOM
+                    const addBookBtn = document.getElementById("addBookBtn");
+
+                    if (addBookBtn) {
+                        addBookBtn.addEventListener("click", () => {
+                            console.log("Redirecionando para a página de criação de livro...");
+                            window.location.href = "./createBook.html";
+                        });
+                    } else {
+                        console.error("Botão 'Adicionar Livro' não encontrado na Dashboard.");
+                    }
+                })
+                .catch(error => console.error("Erro ao carregar o rodapé:", error));
+        }
+
+    </script>
     <script src="./app.js" type="module"></script>
+
 </body>
 
 </html>

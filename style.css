@@ -216,20 +216,72 @@ h1 {
 }
 
 
-.book-list {
+
+
+
+.book-card {
   display: flex;
   flex-direction: column;
-  margin: 10px;
+  align-items: center;
+  margin: 15px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 200px;
+}
+
+.book-cover {
+  width: 100px;
+  height: 150px;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border-radius: 4px;
 }
 
 .book-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  margin: 5px 0;
+  text-align: center;
+}
+
+
+
+
+
+
+.book-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.book-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
   padding: 10px;
-  background-color: #f0f0f0;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 150px;
+  text-align: center;
+}
+
+.book-cover {
+  width: 100px;
+  height: 150px;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+.book-title {
+  font-size: 14px;
+  font-weight: bold;
+  color:black;
 }
 
 
@@ -331,11 +383,10 @@ h1 {
   color: #555;
 }
 
-
-
+/* Corpo */
 body {
-  background-color: #1e1e1e;
   font-family: Arial, sans-serif;
+  background-color: #1e1e1e;
   color: #fff;
   display: flex;
   justify-content: center;
@@ -344,6 +395,7 @@ body {
   margin: 0;
 }
 
+/* Contêiner Principal */
 #createBookPage {
   background-color: #000;
   padding: 20px;
@@ -352,12 +404,14 @@ body {
   width: 400px;
 }
 
-h1 {
+/* Cabeçalho */
+#createBookPage h1 {
   color: #ffca28;
   text-align: center;
   margin-bottom: 20px;
 }
 
+/* Formulário */
 .form-group {
   margin-bottom: 15px;
 }
@@ -393,25 +447,27 @@ button {
   cursor: pointer;
 }
 
+/* Botões */
 .btn-save {
-  background-color: #ffca28;
-  color: #000;
+  background-color: #28a745;
+  color: #fff;
   margin-bottom: 10px;
 }
 
 .btn-save:hover {
-  background-color: #ffd95a;
+  background-color: #36b34d;
 }
 
 .btn-cancel {
-  background-color: #444;
+  background-color: #dc3545;
   color: #fff;
 }
 
 .btn-cancel:hover {
-  background-color: #666;
+  background-color: #e74a58;
 }
 
+/* Área de Importação */
 .import-section {
   display: flex;
   flex-direction: column;
@@ -428,7 +484,7 @@ button {
   height: 34px;
   margin-bottom: 10px;
   transition: transform 0.3s;
-  border-radius:5px;
+  border-radius: 5px;
 }
 
 .upload-icon:hover {
@@ -446,106 +502,55 @@ button {
   text-align: center;
 }
 
-
-#bookList {
-  list-style: none;
-  padding: 0;
-  margin: 20px 0;
-}
-
-#bookList li {
-  background-color: #252525;
-  color: #ffffff;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-}
-
-/* Estilo para o dropdown */
-.dropdown {
-  position: relative;
-  width: 100%;
-}
-
-.dropdown-content {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  max-height: 150px; /* Limita a altura da lista */
-  overflow-y: auto; /* Adiciona barra de rolagem, se necessário */
-  border: 1px solid #444;
-  border-radius: 5px;
-  background-color: #1e1e1e;
-  z-index: 1000; /* Garante que a lista fique acima de outros elementos */
-  display: none; /* Esconde a lista inicialmente */
-}
-
-/* Mostra o dropdown quando houver resultados */
-.dropdown-content.active {
-  display: block;
-}
-
+/* Lista de Resultados da Pesquisa */
 .search-list {
+  max-height: 150px;
+  overflow-y: auto;
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #fff;
+  color: #000;
 }
 
 .search-list li {
-  padding: 10px;
+  padding: 8px 12px;
   cursor: pointer;
-  border-bottom: 1px solid #333;
-  color: #fff;
-  transition: background-color 0.3s ease;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .search-list li:hover {
-  background-color: #333;
+  background-color: #f9f9f9;
 }
 
 .search-list li:last-child {
   border-bottom: none;
 }
 
-
-#uploadBookSection {
-  margin-top: 30px;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #1e1e1e;
-  color: #fff;
-}
-
-#uploadBookSection h2 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-  color: #ffca28;
-}
-
-#uploadBookSection input {
-  margin-right: 10px;
-  padding: 5px;
-  border-radius: 5px;
+/* Barra de Navegação Inferior */
+.bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   background-color: #fff;
-  color: #000;
+  border-top: 1px solid #ccc;
 }
 
-#uploadBookSection button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #ffca28;
+.nav-button {
+  font-size: 1.5rem;
+  background: none;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
+  color: #333;
+  transition: color 0.3s;
 }
 
-#uploadBookSection button:hover {
-  background-color: #ffd95a;
-}
-
-#uploadStatus {
-  margin-top: 10px;
-  font-size: 0.9rem;
+.nav-button:hover {
+  color: #555;
 }
