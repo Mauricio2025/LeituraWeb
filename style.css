@@ -1,77 +1,551 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 /* Corpo */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #1e1e1e;
-    color: #ffffff;
-    overflow: hidden;
-  }
-  
-  /* Esconde elementos */
-  .hidden {
-    display: none !important;
-  }
-  
-  /* Spinner */
-  .spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100%;
-    background-color: #1e1e1e;
-    z-index: 1000;
-    position: fixed;
-  }
-  
-  .spinner h1 {
-    font-size: 3rem;
-    color: #ffca28;
-    text-align: center;
-  }
-  
-  /* Tela de Boas-Vindas */
-  #welcomePage {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    text-align: center;
-    background-color: #1e1e1e;
-    color: #ffffff;
-  }
-  
-  #welcomePage h1 {
-    font-size: 2.5rem;
-    color: #ffca28;
-    margin-bottom: 20px;
-  }
-  
-  #welcomePage p {
-    font-size: 1.2rem;
-    color: #ffffff;
-    margin: 10px 0 20px;
-  }
-  
-  #welcomePage button {
-    margin: 10px;
-    padding: 12px 25px;
-    font-size: 1rem;
-    background-color: #ffca28;
-    color: #1e1e1e;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  #welcomePage button:hover {
-    background-color: #ffd95a;
-  }
-  
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #121212; /* Fundo mais moderno e escuro */
+  color: #ffffff;
+  overflow: hidden;
+}
+
+/* Esconde elementos */
+.hidden {
+  display: none !important;
+}
+
+/* Spinner */
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  background-color: #121212;
+  z-index: 1000;
+  position: fixed;
+}
+
+.spinner h1 {
+  font-size: 3rem;
+  color: #ffca28;
+  text-align: center;
+}
+
+/* Tela de Boas-Vindas */
+#welcomePage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  background-color: #121212;
+  color: #ffffff;
+}
+
+#welcomePage h1 {
+  font-size: 2.5rem;
+  color: #ffca28;
+  margin-bottom: 20px;
+}
+
+#welcomePage p {
+  font-size: 1.2rem;
+  color: #cccccc; /* Tom mais suave */
+  margin: 10px 0 20px;
+}
+
+#welcomePage button {
+  margin: 10px;
+  padding: 12px 25px;
+  font-size: 1rem;
+  background-color: #ffca28;
+  color: #121212;
+  border: none;
+  border-radius: 50px; /* Bordas arredondadas */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+#welcomePage button:hover {
+  background-color: #ffd95a;
+  transform: scale(1.05);
+}
+
+/* Login e Registro */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding: 20px; /* Espaço adicional para evitar toques na borda */
+}
+
+.card {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  width: 90%;
+  max-width: 400px;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.card h2 {
+  font-size: 2rem;
+  color: #ffca28;
+  margin-bottom: 10px;
+}
+
+.card input {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: #252525;
+  color: #ffffff;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.card input:focus {
+  border-color: #ffca28;
+}
+
+.card button {
+  width: 100%;
+  padding: 15px;
+  font-size: 1rem;
+  background-color: #ffca28;
+  color: #121212;
+  border: none;
+  border-radius: 50px; /* Botões mais arredondados */
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.card button:hover {
+  background-color: #ffd95a;
+  transform: scale(1.05);
+}
+
+.card .text {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #cccccc;
+}
+
+.card .text a {
+  color: #ffca28;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.card .text a:hover {
+  text-decoration: underline;
+}
+
+/* Botão de Voltar */
+.back-arrow {
+  text-decoration: none;
+  color: #ffca28;
+  font-size: 1.5rem;
+  display: inline-block;
+  margin-bottom: 20px;
+  transition: color 0.3s;
+}
+
+.back-arrow:hover {
+  color: #ffd95a;
+}
+
+/* Personalização do SweetAlert2 */
+.swal-custom-popup {
+  border-radius: 15px; /* Bordas arredondadas */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra suave */
+}
+
+/* Corpo */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+#dashboardPage {
+  max-width: 450px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 1.8rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.reading-section {
+  margin-bottom: 20px;
+}
+
+.reading-section h2 {
+  font-size: 1.4rem;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+
+.book-list {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+
+.book-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 5px 0;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+
+
+
+.book-item {
+  width: 100px;
+  height: 150px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 5px;
+  color: #ffffff;
+  text-align: center;
+  font-size: 0.9rem;
+  margin: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.book-item strong {
+  font-weight: bold;
+  font-size: 1rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.book-item em {
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
+
+.book-grid {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.book-grid::-webkit-scrollbar {
+  height: 8px;
+}
+
+.book-grid::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.book-grid::-webkit-scrollbar-track {
+  background: #f4f4f4;
+}
+
+.book-grid img {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.book-grid .book-placeholder {
+  width: 80px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ccc;
+  color: #333;
+  font-size: 0.8rem;
+  text-align: center;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.nav-button {
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.nav-button:hover {
+  color: #555;
+}
+
+
+
+body {
+  background-color: #1e1e1e;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+#createBookPage {
+  background-color: #000;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  width: 400px;
+}
+
+h1 {
+  color: #ffca28;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #ffca28;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #444;
+  border-radius: 5px;
+  background-color: #1e1e1e;
+  color: #fff;
+  font-size: 14px;
+}
+
+textarea {
+  resize: none;
+  height: 60px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-save {
+  background-color: #ffca28;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.btn-save:hover {
+  background-color: #ffd95a;
+}
+
+.btn-cancel {
+  background-color: #444;
+  color: #fff;
+}
+
+.btn-cancel:hover {
+  background-color: #666;
+}
+
+.import-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.upload-label {
+  cursor: pointer;
+}
+
+.upload-icon {
+  width: 48px;
+  height: 34px;
+  margin-bottom: 10px;
+  transition: transform 0.3s;
+  border-radius:5px;
+}
+
+.upload-icon:hover {
+  transform: scale(1.1);
+}
+
+.hidden-input {
+  display: none;
+}
+
+.upload-status {
+  font-size: 14px;
+  color: #ffca28;
+  margin-top: 10px;
+  text-align: center;
+}
+
+
+#bookList {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+#bookList li {
+  background-color: #252525;
+  color: #ffffff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+/* Estilo para o dropdown */
+.dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 150px; /* Limita a altura da lista */
+  overflow-y: auto; /* Adiciona barra de rolagem, se necessário */
+  border: 1px solid #444;
+  border-radius: 5px;
+  background-color: #1e1e1e;
+  z-index: 1000; /* Garante que a lista fique acima de outros elementos */
+  display: none; /* Esconde a lista inicialmente */
+}
+
+/* Mostra o dropdown quando houver resultados */
+.dropdown-content.active {
+  display: block;
+}
+
+.search-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.search-list li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #333;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.search-list li:hover {
+  background-color: #333;
+}
+
+.search-list li:last-child {
+  border-bottom: none;
+}
+
+
+#uploadBookSection {
+  margin-top: 30px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #1e1e1e;
+  color: #fff;
+}
+
+#uploadBookSection h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #ffca28;
+}
+
+#uploadBookSection input {
+  margin-right: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #000;
+}
+
+#uploadBookSection button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #ffca28;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#uploadBookSection button:hover {
+  background-color: #ffd95a;
+}
+
+#uploadStatus {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}

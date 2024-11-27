@@ -7,28 +7,15 @@
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <!-- Spinner -->
   <div id="spinner" class="spinner">
     <h1>leitura</h1>
   </div>
-
-  <!-- Tela de Boas-Vindas -->
-  <div id="welcomePage" class="hidden">
-    <h1>leitura</h1>
-    <p>
-      “Um leitor vive mil vidas antes de morrer. O homem que nunca lê vive apenas uma.”<br>
-      — George R. R. Martin
-    </p>
-    <button id="viewUsersBtn">Visualizar Usuários</button>
-  </div>
-
-  <!-- Página de Listagem -->
-  <div id="usersPage" class="hidden">
-    <h2>Usuários Cadastrados</h2>
-    <ul id="userList"></ul>
-    <button id="logoutBtn">Voltar</button>
-  </div>
-
-  <script type="module" src="app.js"></script>
+  <script>
+    // Redireciona para a página de login após 2 segundos
+    setTimeout(() => {
+      window.location.href = "./login.html";
+    }, 2000);
+  </script>
 </body>
 </html>
+
