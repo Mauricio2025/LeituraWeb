@@ -4,40 +4,170 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leitura</title>
+  <title>Ambiente de Leitura</title>
   <link rel="stylesheet" href="./style.css">
+  <style>
+    /* Estilos básicos */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    #readingPage {
+      padding: 20px;
+      text-align: center;
+    }
+
+    #bookTitle {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    #bookDescription {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    #uploadSection {
+      margin-top: 20px;
+    }
+
+    #pdfViewerModal,
+    #shareModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    #pdfViewerContainer {
+      position: relative;
+      width: 90%;
+      height: 80%;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #pdfViewerContainer iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    #modalControls,
+    #shareModalContent {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      margin-top: 10px;
+    }
+
+    .modal-button {
+      padding: 10px 15px;
+      font-size: 16px;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .modal-button:hover {
+      background: #555;
+    }
+
+    #closePdfModal,
+    #closeShareModal {
+      background: #ff4444;
+    }
+
+    #closePdfModal:hover,
+    #closeShareModal:hover {
+      background: #ff6666;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #shareModalContent {
+      flex-direction: column;
+    }
+
+    .email-input {
+      width: 90%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .info-text {
+      color: #fff;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+  </style>
 </head>
 
 <body>
-  <div id="readingPage">
-    <h1 id="bookTitle">Título do Livro</h1>
-    <p id="bookContent">Conteúdo do livro será exibido aqui.</p>
+  <div id="readingPage" class="reading-container">
+    <h1 id="bookTitle">Carregando Título...</h1>
+    <p id="bookDescription">Carregando descrição...</p>
+    <div id="bookReader" class="book-reader">
+      <a id="readerLink" class="reader-link" target="_blank">Abrir no Google Books</a>
+      <div id="uploadSection">
+        <label for="pdfUpload">Envie um arquivo PDF:</label>
+        <input type="file" id="pdfUpload" accept="application/pdf" />
+        <button id="openPdfReader">Visualizar PDF</button>
+        <button id="shareReading">Compartilhar Leitura</button>
+      </div>
+    </div>
     <button id="backToDashboardBtn">Voltar para Dashboard</button>
   </div>
 
-  <script>
-    if (!['/login', '/register'].includes(window.location.pathname)) {
-      fetch('/footer.html')
-        .then(response => response.text())
-        .then(footerHtml => {
-          document.body.insertAdjacentHTML('beforeend', footerHtml);
+  <!-- Modal para exibir o PDF -->
+  <div id="pdfViewerModal">
+    <div id="pdfViewerContainer">
+      <iframe id="pdfViewer"></iframe>
+    </div>
+    <div id="modalControls">
+      <button id="closePdfModal" class="modal-button">Fechar</button>
+      <button id="fullscreenPdf" class="modal-button">Tela Cheia</button>
+      <button id="downloadPdf" class="modal-button">Download</button>
+      <button id="zoomIn" class="modal-button">Zoom +</button>
+      <button id="zoomOut" class="modal-button">Zoom -</button>
+    </div>
+  </div>
 
-          // Agora o rodapé foi adicionado ao DOM
-          const addBookBtn = document.getElementById("addBookBtn");
+  <!-- Modal para compartilhamento -->
+  <div id="shareModal">
+    <div id="shareModalContent">
+      <p class="info-text">Você pode compartilhar a leitura com até 2 pessoas.</p>
+      <input type="email" id="email1" class="email-input" placeholder="Digite o e-mail da pessoa 1" />
+      <input type="email" id="email2" class="email-input" placeholder="Digite o e-mail da pessoa 2" />
+      <button id="sendShare" class="modal-button">Enviar Convite</button>
+      <button id="closeShareModal" class="modal-button">Fechar</button>
+    </div>
+  </div>
 
-          if (addBookBtn) {
-            addBookBtn.addEventListener("click", () => {
-              console.log("Redirecionando para a página de criação de livro...");
-              window.location.href = "./createBook.html";
-            });
-          } else {
-            console.error("Botão 'Adicionar Livro' não encontrado na Dashboard.");
-          }
-        })
-        .catch(error => console.error("Erro ao carregar o rodapé:", error));
-    }
 
-  </script>
+  <!-- Script Externo -->
   <script src="./app.js" type="module"></script>
 </body>
 

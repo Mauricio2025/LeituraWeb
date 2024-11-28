@@ -15,11 +15,17 @@
       <div id="allBooks" class="book-list"></div>
     </section>
   </div>
-  <!-- <section class="reading-section">
-    <h2>Próxima Leitura</h2>
-    <div id="nextReading" class="book-list"></div>
-  </section> -->
+
+  <!-- Modal -->
+  <div id="bookModal" class="modal hidden">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <h2 id="modalBookTitle"></h2>
+      <button id="shareReading" class="modal-button">Compartilhar Leitura</button>
+      <button id="readBook" class="modal-button">Ler o Livro</button>
+    </div>
   </div>
+
   <script>
     if (!['/login', '/register'].includes(window.location.pathname)) {
       fetch('/footer.html')
@@ -27,21 +33,15 @@
         .then(footerHtml => {
           document.body.insertAdjacentHTML('beforeend', footerHtml);
 
-          // Agora o rodapé foi adicionado ao DOM
           const addBookBtn = document.getElementById("addBookBtn");
-
           if (addBookBtn) {
             addBookBtn.addEventListener("click", () => {
-              console.log("Redirecionando para a página de criação de livro...");
               window.location.href = "./createBook.html";
             });
-          } else {
-            console.error("Botão 'Adicionar Livro' não encontrado na Dashboard.");
           }
         })
         .catch(error => console.error("Erro ao carregar o rodapé:", error));
     }
-
   </script>
   <script src="./app.js" type="module"></script>
 </body>

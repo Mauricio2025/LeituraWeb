@@ -41,6 +41,11 @@ const currentlyReading = document.getElementById("currentlyReading");
 const nextReading = document.getElementById("nextReading");
 const registerForm = document.getElementById("registerForm");
 const loginForm = document.getElementById("authForm");
+const bookModal = document.getElementById("bookModal");
+const modalBookTitle = document.getElementById("modalBookTitle");
+const closeModal = document.getElementById("closeModal");
+const shareReading = document.getElementById("shareReading");
+const readBook = document.getElementById("readBook");
 
 // Função de spinner para exibir enquanto carrega
 window.addEventListener("load", () => {
@@ -144,28 +149,396 @@ onAuthStateChanged(auth, (user) => {
 });
 
 
-// Função para renderizar os livros no container
-const renderBooks = (container, books) => {
-  if (!container) {
-    console.warn("Contêiner não encontrado para renderizar os livros.");
-    return;
+function openModal(book) {
+  modalBookTitle.textContent = book.title || "Título não disponível";
+  bookModal.classList.remove("hidden");
+  bookModal.style.display = "flex";
+
+  // Configura o botão "Ler o Livro"
+  readBook.onclick = () => {
+    const bookData = {
+      title: book.title || "Sem título",
+      description: book.description || "Sem descrição disponível.",
+      previewLink: book.previewLink || null,
+      webReaderLink: book.webReaderLink || null,
+    };
+
+    // Salva os dados no localStorage
+    localStorage.setItem("selectedBook", JSON.stringify(bookData));
+
+    // Exibe mensagem de carregamento
+    const loadingMessage = document.createElement("div");
+    loadingMessage.id = "loadingMessage";
+    loadingMessage.style.position = "fixed";
+    loadingMessage.style.top = "50%";
+    loadingMessage.style.left = "50%";
+    loadingMessage.style.transform = "translate(-50%, -50%)";
+    loadingMessage.style.background = "#000";
+    loadingMessage.style.color = "#fff";
+    loadingMessage.style.padding = "20px 40px";
+    loadingMessage.style.borderRadius = "8px";
+    loadingMessage.style.textAlign = "center";
+    loadingMessage.style.fontSize = "18px";
+    loadingMessage.textContent = "Abrindo ambiente de leitura...";
+
+    document.body.appendChild(loadingMessage);
+
+    // Redireciona para a página de leitura
+    setTimeout(() => {
+      window.location.href = "./reading.html";
+    }, 2000);
+  };
+
+  // Configura o botão "Compartilhar Leitura"
+  shareReading.onclick = () => {
+    Swal.fire({
+      icon: "info",
+      title: "Compartilhar Leitura",
+      text: "Funcionalidade em desenvolvimento!",
+    });
+  };
+}
+
+
+// Função para fechar o modal
+closeModal.onclick = () => {
+  bookModal.classList.add("hidden");
+  bookModal.style.display = "none";
+};
+
+//Recuperar Dados do Livro Selecionado
+
+const selectedBook = JSON.parse(localStorage.getItem("selectedBook"));
+
+if (selectedBook) {
+  document.getElementById("bookTitle").textContent = selectedBook.title;
+  document.getElementById("bookDescription").textContent = selectedBook.description;
+
+  const readerLink = document.getElementById("readerLink");
+  const uploadSection = document.getElementById("uploadSection");
+
+  if (selectedBook.webReaderLink) {
+    readerLink.href = selectedBook.webReaderLink;
+    readerLink.textContent = "Abrir Leitura no Navegador";
+    uploadSection.classList.add("hidden");
+  } else if (selectedBook.previewLink) {
+    readerLink.href = selectedBook.previewLink;
+    readerLink.textContent = "Visualizar Prévia no Google Books";
+    uploadSection.classList.add("hidden");
+  } else {
+    readerLink.textContent = "Leitura não disponível";
+    readerLink.style.pointerEvents = "none";
+    uploadSection.classList.remove("hidden");
   }
+} else {
+  document.getElementById("bookTitle").textContent = "Erro ao carregar livro";
+  document.getElementById("bookDescription").textContent = "Nenhum livro foi selecionado.";
+}
+
+//Configurações de Upload e Leitura de PDF
+
+const pdfUpload = document.getElementById("pdfUpload");
+const openPdfReader = document.getElementById("openPdfReader");
+const pdfViewerModal = document.getElementById("pdfViewerModal");
+const pdfViewer = document.getElementById("pdfViewer");
+const closePdfModal = document.getElementById("closePdfModal");
+const fullscreenPdf = document.getElementById("fullscreenPdf");
+const downloadPdf = document.getElementById("downloadPdf");
+const zoomIn = document.getElementById("zoomIn");
+const zoomOut = document.getElementById("zoomOut");
+
+let currentZoom = 1;
+
+// Abrir modal para leitura do PDF
+openPdfReader.addEventListener("click", () => {
+  const file = pdfUpload.files[0];
+  if (file) {
+    const fileUrl = URL.createObjectURL(file);
+    pdfViewer.src = fileUrl;
+    pdfViewerModal.style.display = "flex";
+    downloadPdf.dataset.url = fileUrl;
+  } else {
+    alert("Por favor, selecione um arquivo PDF.");
+  }
+});
+
+closePdfModal.addEventListener("click", () => {
+  pdfViewerModal.style.display = "none";
+  pdfViewer.src = "";
+});
+
+fullscreenPdf.addEventListener("click", () => {
+  if (pdfViewer.requestFullscreen) {
+    pdfViewer.requestFullscreen();
+  } else if (pdfViewer.webkitRequestFullscreen) {
+    pdfViewer.webkitRequestFullscreen();
+  } else if (pdfViewer.msRequestFullscreen) {
+    pdfViewer.msRequestFullscreen();
+  }
+});
+
+downloadPdf.addEventListener("click", () => {
+  const link = document.createElement("a");
+  link.href = downloadPdf.dataset.url;
+  link.download = "livro.pdf";
+  link.click();
+});
+
+zoomIn.addEventListener("click", () => {
+  currentZoom += 0.1;
+  pdfViewer.style.transform = `scale(${currentZoom})`;
+});
+
+zoomOut.addEventListener("click", () => {
+  if (currentZoom > 0.2) {
+    currentZoom -= 0.1;
+    pdfViewer.style.transform = `scale(${currentZoom})`;
+  }
+});
+
+//Configurações de Compartilhamento de Leitura
+const shareModal = document.getElementById("shareModal");
+const closeShareModal = document.getElementById("closeShareModal");
+const sendShare = document.getElementById("sendShare");
+
+shareReading.addEventListener("click", () => {
+  shareModal.style.display = "flex";
+});
+
+closeShareModal.addEventListener("click", () => {
+  shareModal.style.display = "none";
+});
+
+sendShare.addEventListener("click", async () => {
+  const email1 = document.getElementById("email1").value.trim();
+  const email2 = document.getElementById("email2").value.trim();
+
+  if (email1 || email2) {
+    const bookId = `book_${new Date().getTime()}`;
+    const sharedEmails = [email1, email2].filter((e) => e);
+
+    try {
+      await setDoc(doc(db, "SharedBooks", bookId), {
+        title: selectedBook.title,
+        description: selectedBook.description,
+        authorizedEmails: sharedEmails,
+        previewLink: selectedBook.previewLink || null,
+        webReaderLink: selectedBook.webReaderLink || null,
+      });
+
+      sharedEmails.forEach((email) => {
+        emailjs.send("leitura_Web_App", "Leitura_Web_App", {
+          to_email: email,
+          book_title: selectedBook.title,
+          access_link: `https://yourdomain.com/reading.html?bookId=${bookId}`,
+        }).then(() => {
+          console.log("E-mail enviado com sucesso para:", email);
+        }).catch((error) => {
+          console.error("Erro ao enviar e-mail:", error);
+        });
+      });
+
+      alert("Compartilhamento enviado para: " + sharedEmails.join(", "));
+      shareModal.style.display = "none";
+
+    } catch (error) {
+      console.error("Erro ao compartilhar livro:", error);
+    }
+  } else {
+    alert("Por favor, insira ao menos um e-mail válido.");
+  }
+});
+
+//Controle de Acesso ao Livro Compartilhado
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const params = new URLSearchParams(window.location.search);
+    const bookId = params.get("bookId");
+
+    if (bookId) {
+      try {
+        const docRef = doc(db, "SharedBooks", bookId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists() && docSnap.data().authorizedEmails.includes(user.email)) {
+          console.log("Usuário autorizado a visualizar este livro.");
+        } else {
+          alert("Você não tem permissão para acessar este conteúdo.");
+          window.location.href = "./dashboard.html";
+        }
+      } catch (error) {
+        console.error("Erro ao verificar acesso:", error);
+        window.location.href = "./dashboard.html";
+      }
+    }
+  } else {
+    window.location.href = "./login.html";
+  }
+});
+
+
+//                         ReadingPage JS                                 //
+
+
+
+
+// Recupera os dados do livro do localStorage
+
+if (selectedBook) {
+  document.getElementById("bookTitle").textContent = selectedBook.title;
+  document.getElementById("bookDescription").textContent = selectedBook.description;
+
+  const readerLink = document.getElementById("readerLink");
+  const uploadSection = document.getElementById("uploadSection");
+
+  if (selectedBook.webReaderLink) {
+    readerLink.href = selectedBook.webReaderLink;
+    readerLink.textContent = "Abrir Leitura no Navegador";
+    uploadSection.classList.add("hidden");
+  } else if (selectedBook.previewLink) {
+    readerLink.href = selectedBook.previewLink;
+    readerLink.textContent = "Visualizar Prévia no Google Books";
+    uploadSection.classList.add("hidden");
+  } else {
+    readerLink.textContent = "Leitura não disponível";
+    readerLink.style.pointerEvents = "none";
+    uploadSection.classList.remove("hidden");
+  }
+} else {
+  document.getElementById("bookTitle").textContent = "Erro ao carregar livro";
+  document.getElementById("bookDescription").textContent = "Nenhum livro foi selecionado.";
+}
+
+// Configurações para upload e leitura de PDF
+openPdfReader.addEventListener("click", () => {
+  const file = pdfUpload.files[0];
+  if (file) {
+    const fileUrl = URL.createObjectURL(file);
+    pdfViewer.src = fileUrl;
+    pdfViewerModal.style.display = "flex";
+    downloadPdf.dataset.url = fileUrl;
+  } else {
+    alert("Por favor, selecione um arquivo PDF.");
+  }
+});
+
+closePdfModal.addEventListener("click", () => {
+  pdfViewerModal.style.display = "none";
+  pdfViewer.src = "";
+});
+
+fullscreenPdf.addEventListener("click", () => {
+  if (pdfViewer.requestFullscreen) {
+    pdfViewer.requestFullscreen();
+  } else if (pdfViewer.webkitRequestFullscreen) {
+    pdfViewer.webkitRequestFullscreen();
+  } else if (pdfViewer.msRequestFullscreen) {
+    pdfViewer.msRequestFullscreen();
+  }
+});
+
+downloadPdf.addEventListener("click", () => {
+  const link = document.createElement("a");
+  link.href = downloadPdf.dataset.url;
+  link.download = "livro.pdf";
+  link.click();
+});
+
+zoomIn.addEventListener("click", () => {
+  currentZoom += 0.1;
+  pdfViewer.style.transform = `scale(${currentZoom})`;
+});
+
+zoomOut.addEventListener("click", () => {
+  if (currentZoom > 0.2) {
+    currentZoom -= 0.1;
+    pdfViewer.style.transform = `scale(${currentZoom})`;
+  }
+});
+
+shareReading.addEventListener("click", () => {
+  shareModal.style.display = "flex";
+});
+
+closeShareModal.addEventListener("click", () => {
+  shareModal.style.display = "none";
+});
+
+sendShare.addEventListener("click", () => {
+  const email1 = document.getElementById("email1").value.trim();
+  const email2 = document.getElementById("email2").value.trim();
+
+  if (email1 || email2) {
+    alert(`Compartilhamento enviado para: ${[email1, email2].filter(e => e).join(", ")}`);
+    shareModal.style.display = "none";
+  } else {
+    alert("Por favor, insira ao menos um e-mail válido.");
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Botão para voltar ao dashboard
+  const backToDashboardBtn = document.getElementById("backToDashboardBtn");
+  if (backToDashboardBtn) {
+    backToDashboardBtn.onclick = () => {
+      window.location.href = "./dashboard.html";
+    };
+  } else {
+    console.error("Elemento 'backToDashboardBtn' não encontrado.");
+  }
+
+  // Compartilhar leitura
+  const shareReading = document.getElementById("shareReading");
+  const shareModal = document.getElementById("shareModal");
+  const closeShareModal = document.getElementById("closeShareModal");
+  const sendShare = document.getElementById("sendShare");
+
+  if (shareReading && shareModal && closeShareModal && sendShare) {
+    shareReading.onclick = () => {
+      shareModal.style.display = "flex";
+    };
+
+    closeShareModal.onclick = () => {
+      shareModal.style.display = "none";
+    };
+
+    sendShare.onclick = () => {
+      const email1 = document.getElementById("email1").value.trim();
+      const email2 = document.getElementById("email2").value.trim();
+
+      if (email1 || email2) {
+        alert(`Compartilhamento enviado para: ${[email1, email2].filter(e => e).join(", ")}`);
+        shareModal.style.display = "none";
+      } else {
+        alert("Por favor, insira ao menos um e-mail válido.");
+      }
+    };
+  } else {
+    console.error("Elementos para compartilhamento de leitura não encontrados.");
+  }
+});
+
+
+
+//                               Final ReadingPage JS                                 //
+
+
+
+// Renderiza os livros na dashboard
+function renderBooks(container, books) {
+  if (!container) return;
 
   container.innerHTML = ""; // Limpa o contêiner antes de adicionar os livros
 
   if (books.length === 0) {
-    console.warn("Nenhum livro para exibir.");
     container.innerHTML = "<p>Nenhum livro encontrado.</p>";
     return;
   }
 
   books.forEach((book) => {
-    console.log("Renderizando livro:", book);
-
     const bookElement = document.createElement("div");
     bookElement.classList.add("book-card");
 
-    // Define a capa do livro ou uma imagem padrão
     const coverUrl = book.cover || "../img/pexels-photo-1907785.jpeg";
     const coverImg = document.createElement("img");
     coverImg.src = coverUrl;
@@ -173,18 +546,19 @@ const renderBooks = (container, books) => {
     coverImg.classList.add("book-cover");
     bookElement.appendChild(coverImg);
 
-    // Título do livro
     const titleElement = document.createElement("div");
     titleElement.classList.add("book-title");
     titleElement.textContent = book.title || "Sem título";
     bookElement.appendChild(titleElement);
 
-    // Adicionar o card ao contêiner
+    // Adiciona evento para abrir o modal ao clicar no livro
+    bookElement.addEventListener("click", () => openModal(book));
+
     container.appendChild(bookElement);
   });
-};
+}
 
-// Função para carregar os livros do Firestore
+// Função para carregar livros
 async function loadBooks() {
   try {
     const booksSnapshot = await getDocs(collection(db, "Books"));
@@ -192,24 +566,20 @@ async function loadBooks() {
 
     booksSnapshot.forEach((doc) => {
       const book = doc.data();
-      console.log("Livro encontrado:", book);
       allBooks.push(book);
     });
 
     const allBooksContainer = document.getElementById("allBooks");
-
-    if (allBooksContainer) {
-      renderBooks(allBooksContainer, allBooks); // Renderiza todos os livros
-    } else {
-      console.error("Contêiner 'allBooks' não encontrado.");
-    }
+    renderBooks(allBooksContainer, allBooks);
   } catch (error) {
     console.error("Erro ao carregar livros:", error);
   }
 }
 
-// Chamar a função para carregar os livros ao iniciar
+// Carregar livros ao iniciar
 loadBooks();
+
+
 
 // Configurar a capa ao selecionar um livro
 if (searchBookInput) {
@@ -314,14 +684,6 @@ if (createBookForm) {
   });
 }
 
-
-
-
-
-
-
-// Chama a função de carregar livros ao iniciar
-// loadBooks();
 
 document.addEventListener("DOMContentLoaded", () => {
   const addBookBtn = document.getElementById("addBookBtn");
